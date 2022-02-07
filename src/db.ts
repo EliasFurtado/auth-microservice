@@ -1,17 +1,12 @@
-const { Client } = require('pg')
+import { Pool } from "pg"
 
-const client = new Client({
-  host: 'localhost',
-  port: 5432,
+const db = new Pool({
   user: 'postgres',
+  host: 'localhost',
+  database: 'auth-microservice',
   password: '123',
+  port: 5432,
 })
 
-client.connect()
-client.query('SELECT NOW()', (err: Error, res: Response) => {
-  if (err) throw err
-  console.log(res)
-  client.end()
-})
 
-export default client
+export default db
