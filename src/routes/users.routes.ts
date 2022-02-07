@@ -19,4 +19,14 @@ usersRoute.post('/users', (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).send(newUser)
 })
 
+usersRoute.put('/users/:id', (req: Request, res: Response) => {
+    const id = req.params.id
+    res.status(StatusCodes.OK).send({id})
+})
+
+usersRoute.delete('/users/:id', (req: Request, res: Response) => {
+    const id = req.params.id
+    res.sendStatus(StatusCodes.OK)
+})
+
 export default usersRoute
