@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import express, { Request, Response } from 'express'
+import client from './db'
 import usersRoute from './routes/users.routes'
 
 dotenv.config()
