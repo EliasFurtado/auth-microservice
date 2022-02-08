@@ -10,9 +10,10 @@ usersRoute.get('/users', async(req: Request, res: Response) => {
     res.status(StatusCodes.OK).send(users)
 })
 
-usersRoute.get('/users/:id', (req: Request, res: Response) => {
+usersRoute.get('/users/:id', async(req: Request, res: Response) => {
     const id = req.params.id
-    res.status(StatusCodes.OK).send({id})
+    const user = await userRepository.findUserById(id)
+    res.status(StatusCodes.OK).send({user})
 })
 
 usersRoute.post('/users', (req: Request, res: Response) => {

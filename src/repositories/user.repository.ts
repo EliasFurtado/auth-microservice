@@ -11,9 +11,21 @@ class UserRepository {
             SELECT uuid, username
             FROM user_application
         `
-        const result = await db.query<User>(query)
-        const rows = result.rows
+        const {rows} = await db.query<User>(query)
         return rows || []
+    }
+
+    async findUserById(id: string): Promise<User[]> {
+        const query = `
+            SELECT uuid, username
+            FROM user_application
+            WHERE uuid = $1
+        `
+        const values = [id]
+        const {rows} = await db.query<User>(query, values)
+        const user = rows
+
+        return user
     }
 }
 
