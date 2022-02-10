@@ -16,18 +16,28 @@ usersRoute.get('/users/:id', async(req: Request, res: Response) => {
     res.status(StatusCodes.OK).send({user})
 })
 
-usersRoute.post('/users', (req: Request, res: Response) => {
+usersRoute.post('/users', async(req: Request, res: Response) => {
     const newUser = req.body
-    res.status(StatusCodes.CREATED).send(newUser)
+    const id = await userRepository.create(newUser)
+    res.status(StatusCodes.CREATED).send(id)
 })
 
-usersRoute.put('/users/:id', (req: Request, res: Response) => {
+usersRoute.put('/users/:id', async(req: Request, res: Response) => {
     const id = req.params.id
-    res.status(StatusCodes.OK).send({id})
+    const modifiedUser = req.body
+    
+    modifiedUser.uuid = id
+    
+    await userRepository.update(modifiedUser)
+
+    res.status(StatusCodes.OK).send()
 })
 
-usersRoute.delete('/users/:id', (req: Request, res: Response) => {
+usersRoute.delete('/users/:id', async(req: Request, res: Response) => {
     const id = req.params.id
+
+    await userRepository.remove(id)
+    
     res.sendStatus(StatusCodes.OK)
 })
 
