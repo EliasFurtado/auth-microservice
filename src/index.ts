@@ -1,7 +1,8 @@
 import dotenv from 'dotenv'
 import express, { Request, Response } from 'express'
-import client from './db'
+import errorHandler from './middlewares/error-handler.middleware'
 import usersRoute from './routes/users.routes'
+
 
 dotenv.config()
 
@@ -13,6 +14,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 app.use(usersRoute)
+
+app.use(errorHandler)
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).send({name: "elias"})
