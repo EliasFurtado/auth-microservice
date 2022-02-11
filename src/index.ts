@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import express, { Request, Response } from 'express'
 import errorHandler from './middlewares/error-handler.middleware'
+import authorizationRoute from './routes/authorization.routes'
 import usersRoute from './routes/users.routes'
 
 
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 app.use(usersRoute)
+app.use(authorizationRoute)
 
 app.use(errorHandler)
 
