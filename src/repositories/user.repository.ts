@@ -16,7 +16,7 @@ class UserRepository {
         return rows || []
     }
 
-    async findUserById(id: string): Promise<User[]> {
+    async findUserById(id: string): Promise<User> {
         try {
             const query = `
                 SELECT uuid, username
@@ -25,11 +25,29 @@ class UserRepository {
             `
             const values = [id]
             const {rows} = await db.query<User>(query, values)
-            const user = rows
+            const [user] = rows
     
             return user
         } catch (error){
             throw new DatabaseError('Erro na consulta por ID', error)
+        }
+    }
+
+    async findUserByUsernameAndPassword(username:string, password:string): Promise<User | null>  {
+        try {
+            const query = `
+                SELECT uuid, username
+                FROM user_application
+                WHERE username = $1
+                AND password = crypt($2, 'my_salt')
+            `
+            const values = [username, password]
+            const {rows} = await db.query<User>(query, values)
+            const [user] = rows
+            
+            return user || null
+        } catch (error) {
+            throw new DatabaseError('Erro na consulta por usuario e senha', error)
         }
     }
 
