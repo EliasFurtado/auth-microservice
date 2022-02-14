@@ -1,33 +1,27 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
+import JWT from "jsonwebtoken";
+import basicAuthenticationMiddleware from "../middlewares/basic-authentication.middleware";
 import ForbiddenError from "../models/errors/forbidden.error.model";
 import userRepository from "../repositories/user.repository";
 
 
 const authorizationRoute = Router()
 
-authorizationRoute.post('/token', async(req: Request, res: Response, next: NextFunction) => {
+authorizationRoute.post('/token',basicAuthenticationMiddleware, async(req: Request, res: Response, next: NextFunction) => {
     try{
-        const authorizationHeader = req.headers['authorization']
-    
-        if(!authorizationHeader) {
-            throw new ForbiddenError('Unauthorized')
+        const user = req.user
+
+        if(!user) {
+            throw new ForbiddenError('User not provided')
         }
 
-        const [authenticationType, token] = authorizationHeader.split(' ')
+        const jwtPayLoad = {username: user.username}
+        const secretKey = 'my_secret_key'
+        const jwtOption = {subject: user?.uuid}
 
-        if (authenticationType !== 'Basic' || !token) {
-            throw new ForbiddenError('Invalid authentication type')
-        }
-        const autorizationContent = Buffer.from(token, 'base64').toString('utf-8')
-
-        const [username, password] = autorizationContent.split(':')
-
-        if(!username || !password) {
-            throw new ForbiddenError('Username or password has no provided!')
-        }
-        const user = await userRepository.findUserByUsernameAndPassword(username, password)
-        res.status(StatusCodes.OK).send(user)
+        const jwt = JWT.sign(jwtPayLoad, secretKey, jwtOption)
+        res.status(StatusCodes.OK).json({token: jwt})
 
     } catch(error) {
         next(error)
