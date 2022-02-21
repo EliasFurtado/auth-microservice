@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import express, { Request, Response } from 'express'
-import bearerAuthenticationMiddleware from './middlewares/bearer-authentication.middleware'
 import errorHandler from './middlewares/error-handler.middleware'
+import jwtAuthenticationMiddleware from './middlewares/jwt-authentication.middleware'
 import authorizationRoute from './routes/authorization.routes'
 import usersRoute from './routes/users.routes'
 
@@ -15,8 +15,10 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-app.use(bearerAuthenticationMiddleware, usersRoute)
 app.use(authorizationRoute)
+
+app.use(jwtAuthenticationMiddleware)
+app.use(usersRoute)
 
 app.use(errorHandler)
 
