@@ -1,8 +1,11 @@
+import dotenv from 'dotenv'
 import db from "../db"
 import DatabaseError from "../models/errors/database.error.model"
 import User from "../models/user.model"
 
+dotenv.config()
 
+const DB_SECRET_KEY = process.env.DB_SECRET_KEY
 
 class UserRepository {
 
@@ -39,7 +42,7 @@ class UserRepository {
                 SELECT uuid, username
                 FROM user_application
                 WHERE username = $1
-                AND password = crypt($2, 'my_salt')
+                AND password = crypt($2, '${DB_SECRET_KEY}')
             `
             const values = [username, password]
             const {rows} = await db.query<User>(query, values)
@@ -57,7 +60,7 @@ class UserRepository {
                 username,
                 password
                 )
-            VALUES ($1, crypt($2, 'my_salt'))
+            VALUES ($1, crypt($2, '${DB_SECRET_KEY}'))
             RETURNING uuid
         `
         const values =[user.username, user.password]
@@ -71,7 +74,7 @@ class UserRepository {
             UPDATE user_application
             SET
                 username = $1,
-                password = crypt($2, 'my_salt')
+                password = crypt($2, '${DB_SECRET_KEY}')
             WHERE uuid = $3
         `
         const values =[user.username, user.password, user.uuid]

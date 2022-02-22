@@ -1,12 +1,15 @@
 import { Pool } from "pg"
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const connectionString = process.env.DB_CONNECTION_STRING
 
 const db = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'auth-microservice',
-  password: '123',
-  port: 5432,
+  connectionString,
 })
 
 
 export default db
+
+

@@ -4,7 +4,7 @@ import JWT from "jsonwebtoken";
 import basicAuthenticationMiddleware from "../middlewares/basic-authentication.middleware";
 import jwtAuthenticationMiddleware from "../middlewares/jwt-authentication.middleware";
 import ForbiddenError from "../models/errors/forbidden.error.model";
-import userRepository from "../repositories/user.repository";
+
 
 
 const authorizationRoute = Router()
